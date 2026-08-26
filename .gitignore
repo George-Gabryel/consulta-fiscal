@@ -1,0 +1,22 @@
+node_modules/
+dist/
+
+# Segredos - nunca versionar
+server/secrets/*
+!server/secrets/README.md
+!server/secrets/anthropic.key.txt.exemplo
+.env
+.env.local
+
+# Banco gerado por "npm run db:build"
+server/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

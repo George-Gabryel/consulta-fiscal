@@ -1,0 +1,55 @@
+{
+  "_leia_me": [
+    "Codigos e aliquotas usados na montagem da ficha fiscal.",
+    "PIS/COFINS so e calculado para Regime Normal (no Simples Nacional os tributos federais",
+    "estao dentro da guia unica - DAS).",
+    "",
+    "'perfil_pis_cofins_padrao' escolhe entre nao_cumulativo (tipico de Lucro Real) e",
+    "cumulativo (tipico de Lucro Presumido). Ajuste conforme o enquadramento da empresa.",
+    "",
+    "Produtos monofasicos (bebidas frias, combustiveis, farmaceuticos, autopecas, pneus)",
+    "tem tributacao concentrada na industria/importador: na REVENDA o comerciante usa",
+    "CST 04 com aliquota zero. Confirme os segmentos com a contabilidade antes de usar."
+  ],
+  "_atualizado_em": "2026-08-26",
+
+  "cfop": {
+    "tributado_normal": { "codigo": "5102", "descricao": "Venda de mercadoria adquirida ou recebida de terceiros" },
+    "substituicao_tributaria": { "codigo": "5405", "descricao": "Venda de mercadoria adquirida ou recebida de terceiros, sujeita ao regime de substituição tributária, na condição de contribuinte substituído" }
+  },
+
+  "cst_icms": {
+    "tributado_normal": { "codigo": "000", "descricao": "Tributada integralmente" },
+    "substituicao_tributaria": { "codigo": "060", "descricao": "ICMS cobrado anteriormente por substituição tributária" }
+  },
+
+  "csosn": {
+    "tributado_normal": { "codigo": "102", "descricao": "Tributada pelo Simples Nacional sem permissão de crédito" },
+    "substituicao_tributaria": { "codigo": "500", "descricao": "ICMS cobrado anteriormente por substituição tributária ou por antecipação" }
+  },
+
+  "perfil_pis_cofins_padrao": "nao_cumulativo",
+
+  "pis_cofins": {
+    "nao_cumulativo": {
+      "rotulo": "Não cumulativo (Lucro Real)",
+      "pis":    { "cst": "01", "aliquota": 1.65, "descricao": "Operação tributável com alíquota básica" },
+      "cofins": { "cst": "01", "aliquota": 7.6,  "descricao": "Operação tributável com alíquota básica" }
+    },
+    "cumulativo": {
+      "rotulo": "Cumulativo (Lucro Presumido)",
+      "pis":    { "cst": "01", "aliquota": 0.65, "descricao": "Operação tributável com alíquota básica" },
+      "cofins": { "cst": "01", "aliquota": 3.0,  "descricao": "Operação tributável com alíquota básica" }
+    },
+    "monofasico_revenda": {
+      "rotulo": "Monofásico - revenda com alíquota zero",
+      "pis":    { "cst": "04", "aliquota": 0.0, "descricao": "Operação tributável monofásica - revenda a alíquota zero" },
+      "cofins": { "cst": "04", "aliquota": 0.0, "descricao": "Operação tributável monofásica - revenda a alíquota zero" }
+    }
+  },
+
+  "segmentos_cest_monofasicos": {
+    "_leia_me": "Segmentos CEST em que a revenda normalmente e monofasica. Deixe a lista vazia para desativar essa deteccao.",
+    "codigos": ["01", "03", "06", "13", "16", "20"]
+  }
+}

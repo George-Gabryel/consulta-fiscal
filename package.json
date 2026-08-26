@@ -1,0 +1,17 @@
+{
+  "name": "consulta-fiscal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Consulta de NCM, CEST e tributação de saída para os estados do Nordeste",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "instalar": "npm --prefix server install && npm --prefix web install",
+    "preparar": "npm run instalar && npm --prefix server run db:build",
+    "diagnostico": "npm --prefix server run diagnostico",
+    "chave": "npm --prefix server run chave:definir",
+    "dev:api": "npm --prefix server run dev",
+    "dev:web": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix web run build && npm --prefix server start"
+  }
+}

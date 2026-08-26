@@ -1,0 +1,23 @@
+{
+  "name": "consulta-fiscal-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "API de consulta fiscal NCM/CEST para o Nordeste",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:build": "node src/db/build-database.js",
+    "chave:definir": "node scripts/definir-chave.js",
+    "diagnostico": "node scripts/diagnostico.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "13.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

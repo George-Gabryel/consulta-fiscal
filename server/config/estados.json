@@ -1,0 +1,15 @@
+{
+  "_leia_me": "Aliquotas internas de ICMS dos estados do Nordeste usadas pelo sistema. Ao mudar uma aliquota basta editar este arquivo e reiniciar o servidor - nao e necessario alterar codigo.",
+  "_atualizado_em": "2026-08-26",
+  "estados": [
+    { "uf": "MA", "nome": "Maranhão", "aliquota_icms": 23.0 },
+    { "uf": "PI", "nome": "Piauí", "aliquota_icms": 22.5 },
+    { "uf": "BA", "nome": "Bahia", "aliquota_icms": 20.5 },
+    { "uf": "PE", "nome": "Pernambuco", "aliquota_icms": 20.5 },
+    { "uf": "CE", "nome": "Ceará", "aliquota_icms": 20.0 },
+    { "uf": "PB", "nome": "Paraíba", "aliquota_icms": 20.0 },
+    { "uf": "RN", "nome": "Rio Grande do Norte", "aliquota_icms": 20.0 },
+    { "uf": "AL", "nome": "Alagoas", "aliquota_icms": 19.0 },
+    { "uf": "SE", "nome": "Sergipe", "aliquota_icms": 19.0 }
+  ]
+}

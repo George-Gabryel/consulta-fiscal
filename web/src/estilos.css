@@ -1,0 +1,357 @@
+/* ==========================================================================
+   Consulta Fiscal — folha de estilo
+
+   A linguagem visual vem do próprio assunto: o DANFE e os formulários fiscais
+   brasileiros, com campos em caixas de fio fino, rótulos em maiúsculas miúdas
+   e códigos em fonte monoespaçada. Códigos são o conteúdo aqui — NCM, CEST,
+   CFOP, CST — então a monoespaçada não é enfeite: alinha dígito com dígito e
+   deixa a conferência visual mais rápida.
+
+   Todas as fontes são de sistema, de propósito: o servidor pode rodar numa
+   rede local sem internet, e fonte que não carrega vira layout quebrado.
+   ========================================================================== */
+
+:root {
+  --papel: #eef1ef;
+  --superficie: #ffffff;
+  --superficie-fria: #f6f8f7;
+  --tinta: #131a18;
+  --tinta-media: #46534e;
+  --tinta-fraca: #78857f;
+  --fio: #ccd5d1;
+  --fio-forte: #9fada8;
+
+  --petroleo: #0b4a44;
+  --petroleo-claro: #e3eeec;
+  --carimbo: #8a4413;
+  --carimbo-claro: #f6ebe1;
+  --confere: #17603d;
+  --confere-claro: #e2f0e8;
+  --alerta: #8a6d13;
+  --alerta-claro: #f7f0dc;
+
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+  --raio: 3px;
+  --sombra: 0 1px 2px rgba(19, 26, 24, 0.06), 0 8px 24px -16px rgba(19, 26, 24, 0.4);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #raiz { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* --- estrutura ---------------------------------------------------------- */
+
+.aplicacao {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 20px 80px;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--tinta);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.cabecalho h1 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.cabecalho p {
+  margin: 4px 0 0;
+  color: var(--tinta-media);
+  font-size: 13.5px;
+}
+
+.selo-fonte {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--tinta-fraca);
+  text-align: right;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.selo-fonte strong { color: var(--tinta-media); font-weight: 600; }
+
+/* --- formulário de busca ------------------------------------------------ */
+
+.busca {
+  background: var(--superficie);
+  border: 1px solid var(--fio);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 18px;
+  margin-bottom: 22px;
+}
+
+.modos {
+  display: inline-flex;
+  border: 1px solid var(--fio-forte);
+  border-radius: var(--raio);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.modos button {
+  border: 0;
+  background: var(--superficie);
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--tinta-media);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.modos button + button { border-left: 1px solid var(--fio-forte); }
+.modos button:hover { background: var(--superficie-fria); }
+.modos button[aria-pressed='true'] { background: var(--petroleo); color: #fff; }
+
+.linha-busca { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+
+.campo-texto {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--fio-forte);
+  border-radius: var(--raio);
+  background: var(--superficie-fria);
+}
+
+.campo-texto:focus-visible {
+  outline: 2px solid var(--petroleo);
+  outline-offset: 1px;
+  background: var(--superficie);
+}
+
+.campo-texto.mono { font-family: var(--mono); letter-spacing: 0.04em; }
+
+.filtros {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.filtro { display: flex; flex-direction: column; gap: 5px; flex: 1 1 200px; }
+
+.filtro label {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+}
+
+.filtro select {
+  padding: 9px 11px;
+  border: 1px solid var(--fio-forte);
+  border-radius: var(--raio);
+  background: var(--superficie-fria);
+}
+
+.filtro select:focus-visible { outline: 2px solid var(--petroleo); outline-offset: 1px; }
+
+.botao-principal {
+  padding: 11px 24px;
+  border: 0;
+  border-radius: var(--raio);
+  background: var(--petroleo);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 120ms ease;
+}
+
+.botao-principal:hover:not(:disabled) { opacity: 0.88; }
+.botao-principal:disabled { opacity: 0.45; cursor: progress; }
+.botao-principal:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+
+.dica { margin: 12px 0 0; font-size: 12.5px; color: var(--tinta-fraca); }
+
+/* --- mensagens ---------------------------------------------------------- */
+
+.mensagem {
+  border: 1px solid var(--fio);
+  border-left: 3px solid var(--tinta-fraca);
+  border-radius: var(--raio);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  background: var(--superficie);
+}
+
+.mensagem.erro { border-left-color: var(--carimbo); background: var(--carimbo-claro); }
+.mensagem.aviso { border-left-color: var(--alerta); background: var(--alerta-claro); }
+.mensagem h3 { margin: 0 0 4px; font-size: 14px; font-weight: 650; }
+.mensagem ul { margin: 6px 0 0; padding-left: 18px; }
+.mensagem li { margin-bottom: 3px; }
+
+/* --- ficha fiscal (elemento assinatura) --------------------------------- */
+
+.ficha {
+  background: var(--superficie);
+  border: 1px solid var(--fio-forte);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+}
+
+.ficha-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--fio-forte);
+  background: var(--superficie-fria);
+  flex-wrap: wrap;
+}
+
+.ficha-titulo { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinta-fraca); font-weight: 650; }
+
+.ficha-produto { margin: 3px 0 0; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+
+.ficha-contexto { font-family: var(--mono); font-size: 12px; color: var(--tinta-media); text-align: right; line-height: 1.7; }
+
+/* O carimbo de ST é o ponto de maior contraste da tela: é a informação que
+   muda todo o resto da ficha. */
+.carimbo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border: 1.5px solid currentColor;
+  border-radius: var(--raio);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.carimbo.com-st { color: var(--carimbo); background: var(--carimbo-claro); }
+.carimbo.sem-st { color: var(--confere); background: var(--confere-claro); }
+.carimbo::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+/* Grade de campos, no espírito das caixas do DANFE. */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1px;
+  background: var(--fio);
+  border-bottom: 1px solid var(--fio);
+}
+
+.campo { background: var(--superficie); padding: 12px 14px; min-height: 74px; }
+.campo.destaque { background: var(--petroleo-claro); }
+
+.campo dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin-bottom: 5px;
+}
+
+.campo dd { margin: 0; }
+
+.valor-codigo { font-family: var(--mono); font-size: 19px; font-weight: 600; letter-spacing: 0.01em; }
+.valor-texto { font-size: 14px; font-weight: 550; }
+.valor-nulo { font-family: var(--mono); font-size: 19px; color: var(--fio-forte); }
+.campo-nota { display: block; margin-top: 3px; font-size: 11.5px; color: var(--tinta-media); line-height: 1.4; }
+
+.secao { padding: 16px 18px; border-bottom: 1px solid var(--fio); }
+.secao:last-child { border-bottom: 0; }
+
+.secao h3 {
+  margin: 0 0 9px;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  font-weight: 700;
+}
+
+.secao p { margin: 0 0 8px; font-size: 14px; }
+.secao p:last-child { margin-bottom: 0; }
+
+.lista-motivos { margin: 0; padding-left: 17px; font-size: 13.5px; color: var(--tinta-media); }
+.lista-motivos li { margin-bottom: 4px; }
+
+.trilha { font-size: 12.5px; color: var(--tinta-media); line-height: 1.7; }
+.trilha span:not(:last-child)::after { content: ' › '; color: var(--fio-forte); }
+
+.etiquetas { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.etiqueta {
+  font-size: 12px;
+  padding: 3px 9px;
+  border: 1px solid var(--fio);
+  border-radius: 999px;
+  background: var(--superficie-fria);
+  color: var(--tinta-media);
+}
+
+/* --- alternativas ------------------------------------------------------- */
+
+.alternativas { margin-top: 18px; }
+.alternativas summary { cursor: pointer; font-size: 13.5px; font-weight: 550; color: var(--petroleo); padding: 6px 0; }
+.alternativas summary:focus-visible { outline: 2px solid var(--petroleo); outline-offset: 2px; }
+
+.tabela-alternativas { width: 100%; border-collapse: collapse; margin-top: 8px; background: var(--superficie); border: 1px solid var(--fio); }
+.tabela-alternativas th, .tabela-alternativas td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--fio); font-size: 13px; vertical-align: top; }
+.tabela-alternativas th { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--tinta-fraca); background: var(--superficie-fria); }
+.tabela-alternativas td:first-child { font-family: var(--mono); white-space: nowrap; font-weight: 600; }
+.tabela-alternativas tr:last-child td { border-bottom: 0; }
+.tabela-alternativas button { background: none; border: 0; padding: 0; color: var(--petroleo); font-family: var(--mono); font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+/* --- rodapé e estados vazios -------------------------------------------- */
+
+.carregando { display: flex; align-items: center; gap: 10px; color: var(--tinta-media); font-size: 14px; padding: 24px 0; }
+
+.pulso { width: 9px; height: 9px; border-radius: 50%; background: var(--petroleo); animation: pulsar 1.1s ease-in-out infinite; }
+@keyframes pulsar { 0%, 100% { opacity: 0.25; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+
+.vazio { text-align: center; padding: 48px 20px; color: var(--tinta-fraca); }
+.vazio strong { display: block; color: var(--tinta-media); font-weight: 600; margin-bottom: 6px; }
+
+.rodape { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--fio); font-size: 12px; color: var(--tinta-fraca); line-height: 1.7; }
+.rodape code { font-family: var(--mono); background: var(--superficie); padding: 1px 5px; border: 1px solid var(--fio); border-radius: 2px; }
+
+.reservado { margin-top: 18px; border: 1px dashed var(--fio-forte); border-radius: var(--raio); padding: 14px 16px; background: transparent; color: var(--tinta-media); font-size: 13px; }
+.reservado h3 { margin: 0 0 5px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tinta-fraca); font-weight: 700; }
+
+@media (max-width: 560px) {
+  .aplicacao { padding: 20px 14px 60px; }
+  .selo-fonte { text-align: left; }
+  .ficha-contexto { text-align: left; }
+  .grade { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

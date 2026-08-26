@@ -1,0 +1,36 @@
+{
+  "_leia_me": [
+    "Controla QUAIS segmentos CEST sao tratados como sujeitos a Substituicao Tributaria em cada UF.",
+    "",
+    "Ponto de partida: o Convenio ICMS 142/2018 define a lista nacional de segmentos e CEST.",
+    "Cada estado adota (ou nao) cada segmento por protocolo/decreto proprio. Por isso o padrao",
+    "aqui e 'todos os segmentos do Convenio 142/2018 estao sujeitos a ST', e cada UF pode",
+    "remover segmentos ou CEST especificos nas listas de excecao abaixo.",
+    "",
+    "IMPORTANTE: confirme as excecoes com o RICMS de cada estado antes de usar em producao.",
+    "Editar este arquivo NAO exige mexer em codigo - basta reiniciar o servidor."
+  ],
+  "_atualizado_em": "2026-08-26",
+  "base_legal": "Convênio ICMS 142/2018",
+
+  "regra_ncm_outros": {
+    "_leia_me": "Regra de negocio do cliente: NCM residual ('Outros'/'Outras') nao tem ST, exceto bebidas.",
+    "ativa": true,
+    "excecao_bebidas": {
+      "capitulos_ncm": ["22"],
+      "segmentos_cest": ["02", "03"]
+    }
+  },
+
+  "por_uf": {
+    "MA": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "PI": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "BA": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "PE": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "CE": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "PB": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "RN": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "AL": { "segmentos_excluidos": [], "cest_excluidos": [] },
+    "SE": { "segmentos_excluidos": [], "cest_excluidos": [] }
+  }
+}

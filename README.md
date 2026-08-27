@@ -37,6 +37,7 @@ node -v            # precisa mostrar v22 ou maior
 # Back-end
 cd server
 npm install
+cp .env.example .env
 npm run db:build   # gera data/fiscal.db a partir dos JSONs em fontes/
 
 # Front-end

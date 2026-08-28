@@ -25,12 +25,16 @@ export const config = {
   host: process.env.HOST ?? '0.0.0.0',
   ambiente: process.env.NODE_ENV ?? 'development',
 
-  // Origens autorizadas a chamar a API (CORS). Em rede local, informe os
-  // enderecos das maquinas/portas que hospedam o front-end.
-  origensPermitidas: lerLista(process.env.ORIGENS_PERMITIDAS, [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-  ]),
+  // Origens autorizadas a chamar a API (CORS). Esta lista e um acrescimo: a
+  // mesma origem do servidor e os enderecos de rede local ja sao aceitos por
+  // padrao (ver src/security/origens.js). Use "*" para liberar tudo.
+  origensPermitidas: lerLista(process.env.ORIGENS_PERMITIDAS, []),
+
+  // Aceitar chamadas vindas de enderecos da rede local (192.168.x, 10.x,
+  // 172.16-31.x, localhost, nomes .local). E o padrao porque o sistema foi
+  // feito para rodar dentro da rede da empresa. PERMITIR_REDE_LOCAL=nao deixa
+  // valer somente ORIGENS_PERMITIDAS e a mesma origem.
+  permitirRedeLocal: process.env.PERMITIR_REDE_LOCAL !== 'nao',
 
   // Senha simples de acesso ao sistema (opcional). Se definida, o front-end
   // precisa enviar o cabecalho x-acesso. Nao tem relacao com a chave da IA.

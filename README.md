@@ -48,13 +48,22 @@ npm install
 A carga do banco leva alguns segundos e mostra um resumo:
 
 ```
-NCM                   15156
-NCM itens 8 dígitos   10515
-CEST                   1010
-CEST × NCM             1223
+NCM                    1599
+NCM itens 8 dígitos    1110
+CEST                    322
+CEST × NCM              430
 ```
 
-Rode `npm run db:build` de novo sempre que trocar os arquivos em `server/fontes/` por versões mais novas da tabela NCM ou do CEST.
+As fontes em `server/fontes/` são o recorte oficial de **restaurantes e bares** (capítulos 02 a 22 da NCM: carnes, pescados, laticínios, hortaliças, frutas, cereais, açúcares, panificação, molhos, sorvetes e bebidas). São quatro arquivos:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `Tabela_NCM_Vigente_<data>_restaurantes_bares.json` | hierarquia da NCM (capítulo → posição → item) |
+| `Tabela_NCM_SUBITEM_Vigente_<data>_restaurantes_bares.json` | subitens de 8 dígitos, com a unidade de medida |
+| `cest.json` | códigos CEST com descrição e segmento |
+| `cest_ncm.json` | vínculos CEST × NCM |
+
+Rode `npm run db:build` de novo sempre que trocar esses arquivos por versões mais novas. Os dois arquivos de NCM são localizados por prefixo (`Tabela_NCM_Vigente*` e `Tabela_NCM_SUBITEM_Vigente*`), então basta manter o padrão do nome; os dois de CEST são lidos pelo nome exato.
 
 ---
 
@@ -160,18 +169,27 @@ Quando `web/dist` existe, o Express entrega a interface junto com a API na mesma
 ## 5. Publicando na rede local
 
 1. Descubra o IP do servidor (`ip addr` no Linux, `ipconfig` no Windows). O próprio servidor imprime os endereços ao subir.
-2. Em `server/.env`:
+2. Em `server/.env` basta isto:
 
 ```ini
 HOST=0.0.0.0
 PORTA=3001
-ORIGENS_PERMITIDAS=http://192.168.0.50:3001
 SENHA_ACESSO=uma-senha-que-so-a-equipe-conhece
 ```
 
-3. Gere o build do front (`cd web && npm run build`) e inicie `npm start` no `server/`.
-4. A equipe acessa `http://192.168.0.50:3001`.
-5. Libere a porta no firewall do servidor.
+   Não é preciso listar o IP em `ORIGENS_PERMITIDAS`: o servidor já aceita chamadas vindas da própria origem e de endereços de rede local (ver seção 9).
+
+3. Na raiz do projeto, `npm start` — ele gera o build do front e sobe o servidor.
+4. A equipe acessa `http://192.168.0.50:3001`. **Um endereço só**: a mesma porta entrega a interface e a API.
+5. Libere a porta no firewall do servidor. No Windows, o aviso do Firewall aparece na primeira execução — marque "Redes privadas". Se ele já foi negado uma vez, libere na mão:
+
+```powershell
+netsh advfirewall firewall add rule name="Consulta Fiscal 3001" dir=in action=allow protocol=TCP localport=3001
+```
+
+   No Linux com `ufw`: `sudo ufw allow 3001/tcp`.
+
+6. Confira de outra máquina da rede abrindo `http://192.168.0.50:3001/api/saude`. Se esse endereço responder JSON, back-end e rede estão certos.
 
 Se você definir `SENHA_ACESSO`, o front precisa mandá-la. Crie `web/.env` com:
 
@@ -298,7 +316,9 @@ O que está implementado:
 - **A chave nunca sai do servidor.** Não existe rota da API que devolva a chave, e ela não entra em nenhum bundle do front-end. Quem fala com a Anthropic é sempre o back-end. O navegador do usuário só conhece o endereço do seu servidor.
 - **Cifrada em disco.** AES-256-GCM com chave derivada por `scrypt`. O arquivo `secrets/anthropic.key.enc` não contém a chave em texto — se ele vazar num backup ou num commit, o token não vaza junto.
 - **Mascarada em toda saída.** Logs, diagnóstico e a rota `/api/saude` mostram `sk-ant-api…7890`, nunca o valor.
-- **CORS fechado.** Só as origens listadas em `ORIGENS_PERMITIDAS` conseguem chamar a API pelo navegador.
+- **CORS de rede local.** A API aceita chamadas do navegador quando a origem é a própria origem do servidor (`http://IP-DO-SERVIDOR:3001`), um endereço de rede privada (`10.x`, `192.168.x`, `172.16-31.x`, `localhost`, nomes `.local`) ou algo listado em `ORIGENS_PERMITIDAS`. Qualquer outra origem leva 403. Para exigir a lista explícita e nada mais, use `PERMITIR_REDE_LOCAL=nao`.
+
+  Vale dizer com todas as letras o que o CORS faz e o que não faz: ele impede que um **site na internet** aberto no navegador da equipe chame a sua API por baixo dos panos. Ele não impede um `curl` de dentro da rede — nenhuma configuração de CORS impede. Quem controla acesso é a `SENHA_ACESSO` e o firewall.
 - **Senha de acesso opcional** (`SENHA_ACESSO`) para o sistema inteiro.
 - **Limite de requisições** por IP (`LIMITE_REQ_MINUTO`, padrão 30), para um laço acidental no cliente não queimar a cota.
 - **`secrets/` fora do git.**
@@ -345,6 +365,7 @@ consulta-fiscal/
 │   └── src/
 │       ├── server.js               Express, CORS, senha, limite de requisições
 │       ├── config.js               configuração e resolução da chave
+│       ├── security/origens.js     política de origens aceitas (CORS)
 │       ├── db/
 │       │   ├── schema.sql          estrutura do banco
 │       │   ├── build-database.js   carga dos JSONs (única escrita do sistema)
@@ -403,6 +424,17 @@ Campos: `texto` (produto ou NCM), `uf` (uma das nove do Nordeste), `regime` (`si
 
 **A busca não acha o produto** — descreva pelo tipo em vez da marca ("refrigerante de cola" no lugar de "Coca-Cola Zero 350ml"). O painel "outros NCM que a busca encontrou" mostra as alternativas ranqueadas.
 
-**A rede não enxerga o servidor** — confira `HOST=0.0.0.0`, o firewall e se o IP em `ORIGENS_PERMITIDAS` é o mesmo que a equipe digita no navegador.
+**A página abre pelo IP, mas nada funciona: toda consulta dá "Não foi possível falar com o servidor"** — é o sintoma clássico de CORS. A interface carrega porque a navegação do navegador não manda cabeçalho `Origin`; as chamadas de `/api` mandam, e eram recusadas quando o IP do servidor não estava em `ORIGENS_PERMITIDAS`. Isso está resolvido: a mesma origem e os endereços de rede local passam por padrão. Se ainda acontecer, olhe o console do servidor — ele registra `[CORS] Origem recusada: ...` com o endereço exato para acrescentar em `ORIGENS_PERMITIDAS`.
+
+**"Cannot GET /" ou página em branco no IP** — o build do front não existe. Rode `npm run build` na raiz. Desde a versão atual o servidor mostra uma página explicando isso, e passa a servir a interface assim que o build aparece, sem reiniciar.
+
+**A rede não enxerga o servidor** — nesta ordem:
+
+1. No próprio servidor, `curl http://localhost:3001/api/saude`. Não respondeu? O processo caiu — veja o console.
+2. De outra máquina, `curl http://192.168.0.50:3001/api/saude`. Não respondeu? É firewall ou `HOST`. Confira `HOST=0.0.0.0` (o servidor avisa no boot se estiver diferente) e libere a porta (seção 5).
+3. Respondeu JSON mas o navegador não abre? Confira se está digitando `http://` — sem isso o navegador tenta buscar o texto no Google.
+4. O IP mudou de um dia para o outro? É DHCP. Peça ao TI um IP fixo ou uma reserva no roteador para a máquina do servidor.
+
+**Funciona em uma máquina e em outra não** — quase sempre é `web/.env` com `VITE_API_BASE=http://localhost:3001` gravado no build: `localhost` na máquina do usuário é a máquina *dele*, não o servidor. Deixe `VITE_API_BASE` vazio (o padrão) quando o servidor entrega interface e API na mesma porta, e gere o build de novo.
 
 **`npm install` falha no better-sqlite3** — quase sempre é Node abaixo de 22. Confira com `node -v`.
